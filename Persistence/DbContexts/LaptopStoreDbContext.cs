@@ -9,11 +9,11 @@ namespace LaptopStoreAPI.Persistence
         {
             
         }
-        DbSet<Processor> processors { get; set; }
+        public DbSet<Processor> processors { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Processor>()
-                .HasIndex(p => new { p.Model, p.Brand })
+                .HasIndex(p => new { p.Model})
                 .IsUnique();
         }
     }
