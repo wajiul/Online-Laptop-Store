@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LaptopStoreAPI.Controllers.DTOs;
-using LaptopStoreAPI.Models;
+using LaptopStoreAPI.Persistence.Models;
 
 namespace LaptopStoreAPI.Mapping
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LaptopStoreAPI.Models
+namespace LaptopStoreAPI.Persistence.Models
 {
     public class Processor
     {

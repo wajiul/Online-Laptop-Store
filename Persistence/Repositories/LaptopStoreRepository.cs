@@ -1,4 +1,4 @@
-﻿using LaptopStoreAPI.Models;
+﻿using LaptopStoreAPI.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LaptopStoreAPI.Persistence.Repositories

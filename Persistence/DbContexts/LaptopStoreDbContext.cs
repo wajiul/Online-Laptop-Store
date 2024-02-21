@@ -1,4 +1,4 @@
-﻿using LaptopStoreAPI.Models;
+﻿using LaptopStoreAPI.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LaptopStoreAPI.Persistence
@@ -10,11 +10,17 @@ namespace LaptopStoreAPI.Persistence
             
         }
         public DbSet<Processor> processors { get; set; }
+        public DbSet<Ram> rams { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Processor>()
                 .HasIndex(p => new { p.Model})
                 .IsUnique();
+
+            modelBuilder.Entity<Ram>()
+                .HasIndex(r => new { r.Model})
+                .IsUnique();
+
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LaptopStoreAPI.Controllers.DTOs;
-using LaptopStoreAPI.Models;
+using LaptopStoreAPI.Persistence.Models;
 using LaptopStoreAPI.Persistence;
 using LaptopStoreAPI.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
