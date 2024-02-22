@@ -9,6 +9,7 @@ namespace LaptopStoreAPI.Mapping
         public MappingProfile()
         {
             CreateMap<ProcessorDto, Processor>();
+            CreateMap<RamDto, Ram>();
         }
     }
 }

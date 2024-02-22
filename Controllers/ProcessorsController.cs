@@ -7,93 +7,52 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
+using Microsoft.Data.SqlClient;
 
 namespace LaptopStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProcessorsController : ControllerBase
+    public class ProcessorsController : GenericCrudController
     {
-    
-        private readonly LaptopStoreRepository repository;
-        private readonly IMapper mapper;
-        private readonly IUnitOfWork uow;
 
-        public ProcessorsController(LaptopStoreRepository repository, IMapper mapper, IUnitOfWork uow)
+        public ProcessorsController(LaptopStoreRepository repository, IMapper mapper, IUnitOfWork uow): 
+            base(repository, mapper, uow)
         {
-            this.repository = repository;
-            this.mapper = mapper;
-            this.uow = uow;
+      
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProcessor(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var processor = await repository.GetProcessorAsync(id);
-            if(processor == null)
-            {
-                return NotFound();
-            }
-            return Ok(processor);
+            return await base.Get<Processor>(id);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll() 
         {
-            var result = await repository.GetAllProcessorsAsync();
-            return Ok(result);
+            return await base.GetAll<Processor>();
         }
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] ProcessorDto processorDto)
         {
-            var processor = mapper.Map<ProcessorDto, Processor>(processorDto);
+            var processor =  await base.Add<Processor, ProcessorDto>(processorDto);
 
-            await repository.AddProcessorAsync(processor);
-            await uow.Complete();
-
-            return CreatedAtAction("GetProcessor", new { id = processor.Id }, processor);
+            return CreatedAtAction("Get", new { id = processor.Id }, processor);
         }
 
-        [HttpPut]
+
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ProcessorDto processorDto)
         {
-            if (!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-
-            try
-            {
-                var processor = mapper.Map<ProcessorDto, Processor>(processorDto);
-                processor.Id = id;
-
-                repository.UpdateProcessor(processor);
-                await uow.Complete();
-
-                return Ok("Data updated successfully");
-            }
-            catch(Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured while updating data.");
-            }
+            return await base.Update<Processor, ProcessorDto>(id, processorDto);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int id,[FromBody] ProcessorDto processorDto)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var processor =  mapper.Map<ProcessorDto, Processor>(processorDto);
-                processor.Id = id;
-
-                repository.DeleteProcessor(processor);
-                await uow.Complete();
-
-                return Ok("Data deleted successfully.");
-            }
-            catch(Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured while deleting data.");
-            }
+            return await base.Delete<Processor, ProcessorDto>(id);
         }
 
     }
