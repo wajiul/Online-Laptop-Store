@@ -22,9 +22,6 @@ namespace LaptopStoreAPI.Persistence
                 .HasIndex(r => new { r.Model})
                 .IsUnique();
 
-            modelBuilder.Entity<Display>()
-                .HasAlternateKey(d => new { d.Type, d.Size, d.Resolution });
-
 
         }
     }

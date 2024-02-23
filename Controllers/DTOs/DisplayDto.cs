@@ -4,7 +4,6 @@ namespace LaptopStoreAPI.Controllers.DTOs
 {
     public class DisplayDto
     {
-        public int Id { get; set; }
         [Required]
         [StringLength(30, MinimumLength = 1)]
         public string Type { get; set; } = string.Empty;

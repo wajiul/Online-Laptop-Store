@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using LaptopStoreAPI.Persistence.Models;
 using LaptopStoreAPI.Controllers.DTOs;
+using System.Runtime.Versioning;
 
 namespace LaptopStoreAPI.Controllers
 {
@@ -32,12 +33,12 @@ namespace LaptopStoreAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var oldEntity = await repository.FindEntityAsync<TModel>(id);
+            if (oldEntity == null)
+                return NotFound();
+
             try
             {
-                var oldEntity = await repository.FindEntityAsync<TModel>(id);
-                if (oldEntity == null)
-                    return NotFound();
-
                 var entity = mapper.Map<TDto, TModel>(dto, oldEntity);
                 await uow.Complete();
 
@@ -52,6 +53,7 @@ namespace LaptopStoreAPI.Controllers
 
                 return BadRequest();
             }
+            
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating data.");

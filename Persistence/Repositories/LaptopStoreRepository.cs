@@ -105,5 +105,10 @@ namespace LaptopStoreAPI.Persistence.Repositories
             context.Set<T>().Remove(E);
         }
 
+        public async Task<T> IsCompositeExist<T>(Expression<Func<T, bool>> e) where T : class
+        {
+            return await context.Set<T>().SingleOrDefaultAsync(e);
+        }
+
     }
 }

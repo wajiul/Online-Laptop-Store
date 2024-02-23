@@ -5,6 +5,8 @@ using LaptopStoreAPI.Persistence.Models;
 using LaptopStoreAPI.Persistence.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaptopStoreAPI.Controllers
 {
@@ -36,15 +38,37 @@ namespace LaptopStoreAPI.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var display = await base.Add<Display, DisplayDto>(displayDto);
 
-            return CreatedAtAction("Get", new { id = display.Id }, display);
+            if(await IsDisplayExist(displayDto))
+                return BadRequest("Display already exist");
+
+
+            try
+            {
+                var display = await base.Add<Display, DisplayDto>(displayDto);
+                return CreatedAtAction("Get", new { id = display.Id }, display);
+            }
+            catch(DbUpdateException ex)
+            {
+                if(ex.InnerException is SqlException sqlException)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict, sqlException.Message);
+                }
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured while adding data.");
+            }
         }
 
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] DisplayDto displayDto)
         {
+            if (await IsDisplayExist(displayDto))
+                return BadRequest("Display already exist");
+
             return await base.Update<Display, DisplayDto>(id, displayDto);
         }
 
@@ -52,6 +76,14 @@ namespace LaptopStoreAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             return await base.Delete<Display, DisplayDto>(id);
+        }
+
+        private async Task<bool> IsDisplayExist(DisplayDto displayDto)
+        {
+            var exist = await repository.IsCompositeExist<Display>(
+           d => d.Type == displayDto.Type && d.Size == displayDto.Size && d.Resolution == displayDto.Resolution
+            );
+            return exist != null;
         }
 
     }
