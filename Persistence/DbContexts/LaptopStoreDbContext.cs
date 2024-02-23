@@ -11,6 +11,7 @@ namespace LaptopStoreAPI.Persistence
         }
         public DbSet<Processor> processors { get; set; }
         public DbSet<Ram> rams { get; set; }
+        public DbSet<Display> displays { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Processor>()
@@ -20,6 +21,10 @@ namespace LaptopStoreAPI.Persistence
             modelBuilder.Entity<Ram>()
                 .HasIndex(r => new { r.Model})
                 .IsUnique();
+
+            modelBuilder.Entity<Display>()
+                .HasAlternateKey(d => new { d.Type, d.Size, d.Resolution });
+
 
         }
     }

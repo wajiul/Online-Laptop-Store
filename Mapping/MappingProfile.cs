@@ -10,6 +10,7 @@ namespace LaptopStoreAPI.Mapping
         {
             CreateMap<ProcessorDto, Processor>();
             CreateMap<RamDto, Ram>();
+            CreateMap<DisplayDto, Display>();
         }
     }
 }

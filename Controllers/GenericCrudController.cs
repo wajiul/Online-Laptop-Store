@@ -47,7 +47,7 @@ namespace LaptopStoreAPI.Controllers
             {
                 if (ex.InnerException is SqlException exception)
                 {
-                    return StatusCode(StatusCodes.Status409Conflict, $"{typeof(TModel).Name} model already exists");
+                    return StatusCode(StatusCodes.Status409Conflict, exception.Message);
                 }
 
                 return BadRequest();
