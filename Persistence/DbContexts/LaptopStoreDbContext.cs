@@ -12,6 +12,7 @@ namespace LaptopStoreAPI.Persistence
         public DbSet<Processor> processors { get; set; }
         public DbSet<Ram> rams { get; set; }
         public DbSet<Display> displays { get; set; }
+        public DbSet<Drive> drives { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Processor>()
