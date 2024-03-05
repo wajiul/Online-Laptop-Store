@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LaptopStoreAPI.Controllers.DTOs;
+using LaptopStoreAPI.Exceptions;
 using LaptopStoreAPI.Persistence;
 using LaptopStoreAPI.Persistence.Models;
 using LaptopStoreAPI.Persistence.Repositories;

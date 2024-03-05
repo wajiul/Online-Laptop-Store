@@ -1,22 +1,38 @@
+using AutoMapper;
+using LaptopStoreAPI.Controllers.DTOs;
+using LaptopStoreAPI.Persistence;
+using LaptopStoreAPI.Persistence.Models;
+using LaptopStoreAPI.Persistence.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LaptopStoreAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class WeatherForecastController : GenericCrudController
 {
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    private readonly ILogger<WeatherForecastController> _logger;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(LaptopStoreRepository repository, IMapper mapper, IUnitOfWork uow):
+        base(repository, mapper, uow)
     {
-        _logger = logger;
+       
     }
+
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProcessor(int id)
+    {
+        var processor = await repository.GetEntityAsync<Processor>(id);
+        var description = mapper.Map<Processor, LaptopShortDescription>(processor);
+        return Ok(description);
+    }
+
+
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
@@ -29,4 +45,6 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
+
+    
 }
