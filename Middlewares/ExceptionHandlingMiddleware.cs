@@ -1,9 +1,12 @@
 ﻿using LaptopStoreAPI.Exceptions;
+using LaptopStoreAPI.Persistence;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace LaptopStoreAPI.Middlewares
 {
@@ -40,7 +43,10 @@ namespace LaptopStoreAPI.Middlewares
                 {
                     await ResponseToExceptionAsync(context, sqlException.Message, StatusCodes.Status409Conflict);
                 }
-                await ResponseToExceptionAsync(context, dbUpdateException.Message, StatusCodes.Status400BadRequest);
+                else
+                {
+                     await ResponseToExceptionAsync(context, dbUpdateException.Message, StatusCodes.Status400BadRequest);
+                }
             }
             catch (Exception ex)
             {
@@ -54,7 +60,14 @@ namespace LaptopStoreAPI.Middlewares
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
-            await context.Response.WriteAsync(message);
+
+            var errorReponse = new ErrorResponse()
+            {
+                StatusCode = statusCode,
+                Message = message
+            };
+
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(errorReponse));
         }
 
     }

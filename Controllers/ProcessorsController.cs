@@ -38,7 +38,6 @@ namespace LaptopStoreAPI.Controllers
         public async Task<IActionResult> Add([FromBody] ProcessorDto processorDto)
         {
             var processor =  await base.Add<Processor, ProcessorDto>(processorDto);
-
             return CreatedAtAction("Get", new { id = processor.Id }, processor);
         }
 

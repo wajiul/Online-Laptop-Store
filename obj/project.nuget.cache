@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "akbTSsWeTYxZVm1BuRg9A3DEw+zNjLNcJSkJ/fdmYWA2Ry6O/qZAG3qxhVJAw1f+cjrvD2NCoApTw25kprcDiw==",
+  "dgSpecHash": "4hkc1ZL7JQTKs/kkJtohh43yR4fhYO6N5lJH6hco+SWSNwSVCJe9mDCdnnQSni/DCqLKuioGlOKCxs0K6Tw1pg==",
   "success": true,
   "projectFilePath": "D:\\ASP.NET API + Angular\\LaptopStore\\LaptopStoreAPI\\LaptopStoreAPI.csproj",
   "expectedPackageFiles": [
@@ -47,6 +47,7 @@
     "C:\\Users\\dell\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\dell\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "C:\\Users\\dell\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",

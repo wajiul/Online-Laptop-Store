@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using LaptopStoreAPI.Exceptions;
 
 namespace LaptopStoreAPI.Controllers
 {
@@ -42,31 +43,11 @@ namespace LaptopStoreAPI.Controllers
         public async Task<IActionResult> Add([FromBody] DriveDto driveDto)
         {
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-
             if (await IsDriveExist(driveDto))
-                return BadRequest("Drive already exist");
+                throw new DomainExistException("Drive already exist");
 
-
-            try
-            {
-                var drive = await base.Add<Drive, DriveDto>(driveDto);
-                return CreatedAtAction("Get", new { id = drive.Id }, drive);
-            }
-            catch (DbUpdateException ex)
-            {
-                if (ex.InnerException is SqlException sqlException)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, sqlException.Message);
-                }
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured while adding data.");
-            }
+            var drive = await base.Add<Drive, DriveDto>(driveDto);
+            return CreatedAtAction("Get", new { id = drive.Id }, drive);
         }
 
 
@@ -74,12 +55,10 @@ namespace LaptopStoreAPI.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] DriveDto driveDto)
         {
             if (await IsDriveExist(driveDto))
-                return BadRequest("Drive already exist");
+                throw new DomainExistException("Drive already exist");
 
             return await base.Update<Drive, DriveDto>(id, driveDto);
         }
-
-
 
         private async Task<bool> IsDriveExist(DriveDto driveDto)
         {

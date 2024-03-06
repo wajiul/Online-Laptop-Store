@@ -13,6 +13,8 @@ namespace LaptopStoreAPI.Persistence
         public DbSet<Ram> rams { get; set; }
         public DbSet<Display> displays { get; set; }
         public DbSet<Drive> drives { get; set; }
+        public DbSet<GraphicsCard> graphicsCards { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Processor>()
@@ -23,7 +25,10 @@ namespace LaptopStoreAPI.Persistence
                 .HasIndex(r => new { r.Model})
                 .IsUnique();
 
-
+            modelBuilder.Entity<GraphicsCard>()
+                .HasIndex(g => new { g.Model })
+                .IsUnique();
         }
+
     }
 }

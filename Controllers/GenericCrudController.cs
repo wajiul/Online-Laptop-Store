@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LaptopStoreAPI.Persistence.Models;
 using LaptopStoreAPI.Controllers.DTOs;
 using System.Runtime.Versioning;
+using LaptopStoreAPI.Exceptions;
 
 namespace LaptopStoreAPI.Controllers
 {
@@ -30,34 +31,14 @@ namespace LaptopStoreAPI.Controllers
          where TModel : class
          where TDto : class
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var oldEntity = await repository.FindEntityAsync<TModel>(id);
             if (oldEntity == null)
-                return NotFound();
+                throw new DomainNotFoundException(typeof(TModel).Name + " not found");
 
-            try
-            {
-                var entity = mapper.Map<TDto, TModel>(dto, oldEntity);
-                await uow.Complete();
+            var entity = mapper.Map<TDto, TModel>(dto, oldEntity);
+            await uow.Complete();
 
-                return Ok("Data updated successfully");
-            }
-            catch (DbUpdateException ex)
-            {
-                if (ex.InnerException is SqlException exception)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, exception.Message);
-                }
-
-                return BadRequest();
-            }
-            
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating data.");
-            }
+            return Ok("Data updated successfully");
         }
 
         protected async Task<IActionResult> GetAll<T>() where T: class
@@ -71,7 +52,7 @@ namespace LaptopStoreAPI.Controllers
             var entity = await repository.GetEntityAsync<T>(id);
             if (entity == null)
             {
-                return NotFound();
+                throw new DomainNotFoundException(typeof(T).Name + " not found");
             }
             return Ok(entity);
         }
@@ -91,21 +72,15 @@ namespace LaptopStoreAPI.Controllers
         where TModel : class
         where TDto : class
         {
-            try
-            {
-                var entity = await repository.FindEntityAsync<TModel>(id);
-                if (entity == null)
-                    return NotFound();
 
-                repository.DeleteEntity<TModel>(entity);
-                await uow.Complete();
+            var entity = await repository.FindEntityAsync<TModel>(id);
+            if (entity == null)
+                throw new DomainNotFoundException(typeof(TModel).Name + " not found");
 
-                return Ok("Data deleted successfully.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured while deleting data.");
-            }
+            repository.DeleteEntity<TModel>(entity);
+            await uow.Complete();
+
+            return Ok("Data deleted successfully.");
         }
     }
 }

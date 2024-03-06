@@ -36,31 +36,13 @@ namespace LaptopStoreAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] DisplayDto displayDto)
         {
-            if(!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-
+ 
             if(await IsDisplayExist(displayDto))
-                return BadRequest("Display already exist");
+                throw new DomainExistException("Display already exist");
 
+            var display = await base.Add<Display, DisplayDto>(displayDto);
+            return CreatedAtAction("Get", new { id = display.Id }, display);
 
-            try
-            {
-                var display = await base.Add<Display, DisplayDto>(displayDto);
-                return CreatedAtAction("Get", new { id = display.Id }, display);
-            }
-            catch(DbUpdateException ex)
-            {
-                if(ex.InnerException is SqlException sqlException)
-                {
-                    return StatusCode(StatusCodes.Status409Conflict, sqlException.Message);
-                }
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured while adding data.");
-            }
         }
 
 
@@ -68,7 +50,7 @@ namespace LaptopStoreAPI.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] DisplayDto displayDto)
         {
             if (await IsDisplayExist(displayDto))
-                return BadRequest("Display already exist");
+                throw new DomainExistException("Display already exist");
 
             return await base.Update<Display, DisplayDto>(id, displayDto);
         }
