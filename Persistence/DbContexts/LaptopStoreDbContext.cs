@@ -14,6 +14,7 @@ namespace LaptopStoreAPI.Persistence
         public DbSet<Display> displays { get; set; }
         public DbSet<Drive> drives { get; set; }
         public DbSet<GraphicsCard> graphicsCards { get; set; }
+        public DbSet<Laptop> laptops { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,12 @@ namespace LaptopStoreAPI.Persistence
             modelBuilder.Entity<GraphicsCard>()
                 .HasIndex(g => new { g.Model })
                 .IsUnique();
+
+            modelBuilder.Entity<Laptop>()
+                .HasIndex(l => new { l.Model })
+                .IsUnique();
+
+
         }
 
     }
