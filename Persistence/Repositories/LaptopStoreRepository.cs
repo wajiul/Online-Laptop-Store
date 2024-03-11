@@ -1,5 +1,6 @@
 ﻿using LaptopStoreAPI.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Linq.Expressions;
 
 namespace LaptopStoreAPI.Persistence.Repositories
@@ -108,6 +109,32 @@ namespace LaptopStoreAPI.Persistence.Repositories
         public async Task<T> IsCompositeExist<T>(Expression<Func<T, bool>> e) where T : class
         {
             return await context.Set<T>().SingleOrDefaultAsync(e);
+        }
+
+
+        /*Laptop Repository*/
+
+        public async Task<List<Laptop>> GetLaptopsAsync()
+        {
+            return await context.laptops
+                .Include(l => l.Processor)
+                .Include(l => l.Ram)
+                .Include(l => l.Drive)
+                .Include(l => l.Display)
+                .Include(l => l.GraphicsCard)
+                .ToListAsync();
+        }
+
+        public async Task<Laptop> GetLaptopAsync(int id)
+        {
+            return await context.laptops
+                .Include(l => l.Processor)
+                .Include(l => l.Ram)
+                .Include(l => l.Drive)
+                .Include(l => l.Display)
+                .Include(l => l.GraphicsCard)
+                .FirstOrDefaultAsync(l => l.Id == id);
+
         }
 
     }
