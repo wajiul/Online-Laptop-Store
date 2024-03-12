@@ -44,6 +44,9 @@ namespace LaptopStoreAPI.Persistence.Models
         public int DisplayId { get; set; }
         [Required]
         public int GraphicsCardId { get; set; }
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int Price { get; set; }
         public Processor Processor { get; set; }
         public Ram Ram { get; set; }
         public Drive Drive { get; set; }

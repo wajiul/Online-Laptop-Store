@@ -1,6 +1,7 @@
 ﻿using LaptopStoreAPI.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace LaptopStoreAPI.Persistence.Repositories
@@ -116,13 +117,27 @@ namespace LaptopStoreAPI.Persistence.Repositories
 
         public async Task<List<Laptop>> GetLaptopsAsync()
         {
-            return await context.laptops
+            return await IncludeRealatedEntities(context.laptops).ToListAsync();
+        }
+
+        public async Task<List<Laptop>> GetLaptopsByPriceRangeAsync(int start, int end)
+        {
+           return await IncludeRealatedEntities(context.laptops)
+                        .Where(l => l.Price >= start && l.Price <= end).ToListAsync();
+        }
+        public async Task<List<Laptop>> GetLaptopsByBrandAsync(string brand)
+        {
+            return await IncludeRealatedEntities(context.laptops)
+                        .Where(l => l.Brand.ToLower() == brand.ToLower()).ToListAsync();
+        }
+        private IQueryable<Laptop> IncludeRealatedEntities(IQueryable<Laptop> query)
+        {
+            return query
                 .Include(l => l.Processor)
                 .Include(l => l.Ram)
                 .Include(l => l.Drive)
                 .Include(l => l.Display)
-                .Include(l => l.GraphicsCard)
-                .ToListAsync();
+                .Include(l => l.GraphicsCard);
         }
 
         public async Task<Laptop> GetLaptopAsync(int id)

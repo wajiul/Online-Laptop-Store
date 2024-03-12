@@ -20,16 +20,33 @@ namespace LaptopStoreAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await repository.GetLaptopsAsync());
+            var result = await repository.GetLaptopsAsync();
+            var laptops = result.Select(l => mapper.Map<Laptop, LaptopShortDescription>(l)).ToList();
+            return Ok(laptops);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await repository.GetLaptopAsync(id));
+            var laptop = await repository.GetLaptopAsync(id);
+            var laptopCardInfo = mapper.Map<Laptop, LaptopShortDescription>(laptop);
+            return Ok(laptopCardInfo);
+        }
+        [HttpGet("price/{start}/{end}")]
+        public async Task<IActionResult> GetLaptopByPriceRange(int start, int end)
+        {
+            var result = await repository.GetLaptopsByPriceRangeAsync(start, end);
+            var laptops = result.Select(l => mapper.Map<Laptop, LaptopShortDescription>(l)).ToList();
+            return Ok(laptops);
         }
 
-
+        [HttpGet("brand/{brand}")]
+        public async Task<IActionResult> GetLaptopsByBrand(string brand)
+        {
+            var result = await repository.GetLaptopsByBrandAsync(brand);
+            var laptops = result.Select(l => mapper.Map<Laptop, LaptopShortDescription>(l)).ToList();
+            return Ok(laptops);
+        }
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] LaptopDto laptopDto)
         {

@@ -16,11 +16,23 @@ builder.Services.AddDbContext<LaptopStoreDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<LaptopStoreRepository, LaptopStoreRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddDistributedMemoryCache(); // In-memory distributed cache for demonstration purposes
+
+// Configure session management
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "MyShoppingCartSession";
+    options.IdleTimeout = TimeSpan.FromDays(1); // Set session expiration to 1 day
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddCors(options =>
 {
@@ -42,6 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();

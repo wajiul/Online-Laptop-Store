@@ -42,7 +42,8 @@ namespace LaptopStoreAPI.Controllers.DTOs
         public int DisplayId { get; set; }
         [Required]
         public int GraphicsCardId { get; set; }
-
-
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int Price { get; set; }
     }
 }
